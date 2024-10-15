@@ -10,9 +10,6 @@ const PORT = 3000;
 const privateKey = fs.readFileSync('Keys/Keys_Jarryd/privatekey.pem', 'utf8');
 const certificate = fs.readFileSync('path/Keys_Jarryd/certificate.pem', 'utf8');
 
-//const privateKey = fs.readFileSync('Keys/Keys_Jarryd/privatekey.pem', 'utf8');
-//const certificate = fs.readFileSync('path/Keys_Jarryd/certificate.pem', 'utf8');
-
 //const privateKey = fs.readFileSync('Keys/Keys_Mckhyle/privatekey.pem', 'utf8');
 //const certificate = fs.readFileSync('path/Keys_Mckhyle/certificate.pem', 'utf8');
 
