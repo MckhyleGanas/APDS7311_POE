@@ -55,8 +55,8 @@ router.get("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   const query = { _id: new ObjectId(req.params.id) };
 
-  const colection = db.collection("posts");
-  let result = await colection.deleteOne(query);
+  const collection = db.collection("posts");
+  let result = await collection.deleteOne(query);
 
   res.send(result).status(200);
 });
