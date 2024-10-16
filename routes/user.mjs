@@ -1,4 +1,4 @@
-import express from "express"; 
+import express from "express";
 import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 import bcrypt from "bcrypt";
@@ -35,19 +35,22 @@ const schema = Joi.object({
     .pattern(/^[0-9]{11,}$/)
     .required()
     .messages({
-      "string.pattern.base": "ID number must be numeric and at least 11 digits.",
+      "string.pattern.base":
+        "ID number must be numeric and at least 11 digits.",
     }),
   accountNumber: Joi.string()
     .pattern(/^[0-9]{10,}$/)
     .required()
     .messages({
-      "string.pattern.base": "Account number must be numeric and at least 10 digits.",
+      "string.pattern.base":
+        "Account number must be numeric and at least 10 digits.",
     }),
   password: Joi.string()
     .pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/)
     .required()
     .messages({
-      "string.pattern.base": "Password must be at least 8 characters, including letters, numbers, and special characters.",
+      "string.pattern.base":
+        "Password must be at least 8 characters, including letters, numbers, and special characters.",
     }),
 });
 
@@ -55,7 +58,7 @@ const schema = Joi.object({
 router.post("/signup", async (req, res) => {
   // Validate user input using Joi schema
   const { error } = schema.validate(req.body);
-  
+
   if (error) {
     return res.status(400).json({ message: error.details[0].message });
   }
@@ -63,26 +66,30 @@ router.post("/signup", async (req, res) => {
   try {
     // Hash the password
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
-    
+
     // Create new user document
     let newDocument = {
-        firstName: req.body.firstName,
-        lastName: req.body.lastName,
-        idNumber: req.body.idNumber,
-        accountNumber: req.body.accountNumber,
-        password: (await password).toString()
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
+      idNumber: req.body.idNumber,
+      accountNumber: req.body.accountNumber,
+      password: hashedPassword,
+      username: `${req.body.firstName}${req.body.lastName}`,
     };
     let collection = await db.collection("users");
     let result = await collection.insertOne(newDocument);
-  }catch{
-    
+    console.log("User registered with username:", newDocument.username);
+    res.status(201).send(result); // Return a success response
+  } catch (error) {
+    console.error("Signup error:", error);
+    res.status(500).json({ message: "Signup failed" });
   }
 });
 
 // Login route with brute-force protection
 router.post("/login", bruteforce.prevent, async (req, res) => {
-  const { name, password } = req.body;
-  console.log(name + " " + password);
+  const { username, accountNumber, password } = req.body;
+  console.log("Login attempt by:", username, accountNumber);
 
   try {
     const collection = await db.collection("users");
@@ -92,13 +99,13 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
       return res.status(401).json({ message: "Authentication failed 🚨" });
     }
 
-    // Compare the provided password with the hashed password in the database
+    // Compare the provided password with the database password
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
       return res.status(401).json({ message: "Authentication failed 🚨" });
     } else {
-      //Authentication successful
+      // Authentication successful
       const token = jwt.sign(
         { username: user.username, accountNumber: user.accountNumber },
         "this_secret_should_be_longer_than_it_is",
@@ -110,11 +117,11 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
         token: token,
         username: user.username,
       });
-      console.log("your new token is", token);
+      console.log("New token issued:", token);
     }
   } catch (error) {
-    console.error("Login error", error);
-    res.status(500).json({ message: "Login Failed 🚫" });
+    console.error("Login error:", error);
+    res.status(500).json({ message: "Login failed 🚫" });
   }
 });
 
