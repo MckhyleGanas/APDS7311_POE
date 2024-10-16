@@ -14,7 +14,10 @@ var bruteforce = new ExpressBrute(store);
 router.post("/signup", async (req, res) => {
     const password = bcrypt.hash(req.body.password,10)
     let newDocument = {
-        name: req.body.name,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        idNumber: req.body.idNumber,
+        accountNumber: req.body.accountNumber,
         password: (await password).toString()
     };
     let collection = await db.collection("users");
