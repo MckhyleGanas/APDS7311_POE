@@ -33,14 +33,17 @@ router.post("/signup", async (req, res) => {
     res.send(result).status(204)
 });
 
+
+
 //Login
 router.post("/login", bruteforce.prevent, async (req, res) => {
-  const { name, password } = req.body;
-  console.log(name + " " + password);
+  
+  const { username, accountNumber, password } = req.body;
+  console.log(username + " " + accountNumber + " " +  password);
 
   try {
     const collection = await db.collection("users");
-    const user = await collection.findOne({ name });
+    const user = await collection.findOne({ username });
 
     if (!user) {
       return res.status(401).json({ message: "Authentication failed 🚨" });
@@ -61,7 +64,7 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
       res.status(200).json({
         message: "Authentication successfull ✅",
         token: token,
-        name: req.body.name,
+        username: req.body.username,
       });
       console.log("your new token is", token);
     }
