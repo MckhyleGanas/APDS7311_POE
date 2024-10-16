@@ -11,19 +11,19 @@ const app = express();
 
 // SSL credentials
 // const privateKey = fs.readFileSync('Keys/Keys_Jarryd/privatekey.pem', 'utf8');
-// const certificate = fs.readFileSync('path/Keys_Jarryd/certificate.pem', 'utf8');
+// const certificate = fs.readFileSync('Keys/Keys_Jarryd/certificate.pem', 'utf8');
 
 //const privateKey = fs.readFileSync('Keys/Keys_Mckhyle/privatekey.pem', 'utf8');
-//const certificate = fs.readFileSync('path/Keys_Mckhyle/certificate.pem', 'utf8');
+//const certificate = fs.readFileSync('Keys/Keys_Mckhyle/certificate.pem', 'utf8');
 
 const privateKey = fs.readFileSync("Keys/Keys_Kamo/privatekey.pem", "utf8");
 const certificate = fs.readFileSync("Keys/Keys_Kamo/certificate.pem", "utf8");
 
 //const privateKey = fs.readFileSync('Keys/Keys_Given/privatekey.pem', 'utf8');
-//const certificate = fs.readFileSync('path/Keys_Given/certificate.pem', 'utf8');
+//const certificate = fs.readFileSync('Keys/Keys_Given/certificate.pem', 'utf8');
 
 //const privateKey = fs.readFileSync('Keys/Keys_Rue/privatekey.pem', 'utf8');
-//const certificate = fs.readFileSync('path/Keys_Rue/certificate.pem', 'utf8');
+//const certificate = fs.readFileSync('Keys/Keys_Rue/certificate.pem', 'utf8');
 
 const options = { key: privateKey, cert: certificate };
 
