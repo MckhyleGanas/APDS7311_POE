@@ -66,32 +66,26 @@ router.post("/signup", async (req, res) => {
     
     // Create new user document
     let newDocument = {
-      firstName: req.body.firstName,
-      lastName: req.body.lastName,
-      idNumber: req.body.idNumber,
-      accountNumber: req.body.accountNumber,
-      password: hashedPassword.toString(),
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        idNumber: req.body.idNumber,
+        accountNumber: req.body.accountNumber,
+        password: (await password).toString()
     };
-    
-    // Insert new user into the database
     let collection = await db.collection("users");
     let result = await collection.insertOne(newDocument);
-
-    // Send the result back to the client
-    res.status(204).send(result);
-  } catch (error) {
-    console.error("Error during signup:", error);
-    res.status(500).json({ message: "Signup failed 🚫" });
-  }
+    console.log(password);
+    res.send(result).status(204)
 });
 
 // Login route with brute-force protection
 router.post("/login", bruteforce.prevent, async (req, res) => {
   const { name, password } = req.body;
-  
+  console.log(name + " " + password);
+
   try {
     const collection = await db.collection("users");
-    const user = await collection.findOne({ name });
+    const user = await collection.findOne({ username, accountNumber });
 
     if (!user) {
       return res.status(401).json({ message: "Authentication failed 🚨" });
@@ -103,9 +97,9 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
     if (!passwordMatch) {
       return res.status(401).json({ message: "Authentication failed 🚨" });
     } else {
-      // If authentication is successful, generate a JWT token
+      //Authentication successful
       const token = jwt.sign(
-        { username: req.body.username, password: req.body.password },
+        { username: user.username, accountNumber: user.accountNumber },
         "this_secret_should_be_longer_than_it_is",
         { expiresIn: "1h" }
       );
@@ -113,13 +107,13 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
       res.status(200).json({
         message: "Authentication successful ✅",
         token: token,
-        name: req.body.name,
+        username: user.username,
       });
-      console.log("Your new token is", token);
+      console.log("your new token is", token);
     }
   } catch (error) {
     console.error("Login error", error);
-    res.status(500).json({ message: "Login failed 🚫" });
+    res.status(500).json({ message: "Login Failed 🚫" });
   }
 });
 
