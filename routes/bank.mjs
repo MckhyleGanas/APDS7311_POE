@@ -24,9 +24,13 @@ const validateInput = (data) => {
   return { isValid: true };
 };
 
-//Create an transaction
+//Create an transaction (add name, bank name, branch code, account number, swiftcode)
 router.post("/transaction", checkauth, async (req, res) => {
   let newDocument = {
+    sendername: req.body.sendername,
+    bankname: req.body.bankname,
+    brachcode: req.body.branchcode,
+    accountnumber: req.body.accountnumber,
     amount: req.body.amount,
     currency: req.body.currency,
     provider: "SWIFT",
