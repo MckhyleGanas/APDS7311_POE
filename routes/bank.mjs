@@ -29,7 +29,7 @@ router.post("/transaction", checkauth, async (req, res) => {
   let newDocument = {
     sendername: req.body.sendername,
     bankname: req.body.bankname,
-    brachcode: req.body.branchcode,
+    branchcode: req.body.branchcode,
     accountnumber: req.body.accountnumber,
     amount: req.body.amount,
     currency: req.body.currency,
