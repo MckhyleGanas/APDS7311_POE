@@ -74,8 +74,9 @@ router.post("/signup", async (req, res) => {
     };
     let collection = await db.collection("users");
     let result = await collection.insertOne(newDocument);
-    console.log(password);
-    res.send(result).status(204)
+  }catch{
+    
+  }
 });
 
 // Login route with brute-force protection
