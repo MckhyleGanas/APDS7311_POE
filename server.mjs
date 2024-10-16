@@ -13,8 +13,8 @@ const app = express();
 // const privateKey = fs.readFileSync('Keys/Keys_Jarryd/privatekey.pem', 'utf8');
 // const certificate = fs.readFileSync('Keys/Keys_Jarryd/certificate.pem', 'utf8');
 
-//const privateKey = fs.readFileSync('Keys/Keys_Mckhyle/privatekey.pem', 'utf8');
-//const certificate = fs.readFileSync('Keys/Keys_Mckhyle/certificate.pem', 'utf8');
+const privateKey = fs.readFileSync('Keys/Keys_Mckhyle/privatekey.pem', 'utf8');
+const certificate = fs.readFileSync('Keys/Keys_Mckhyle/certificate.pem', 'utf8');
 
 // const privateKey = fs.readFileSync("Keys/Keys_Kamo/privatekey.pem", "utf8");
 // const certificate = fs.readFileSync("Keys/Keys_Kamo/certificate.pem", "utf8");
