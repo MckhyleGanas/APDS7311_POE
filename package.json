@@ -24,6 +24,7 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.9.0",
-    "mongoose": "^8.7.1"
+    "mongoose": "^8.7.1",
+    "xss-clean": "^0.1.4"
   }
 }

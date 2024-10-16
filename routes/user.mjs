@@ -17,6 +17,19 @@ router.use(helmet()); // Use helmet
 // Specifically set the X-Frame-Options header to DENY or SAMEORIGIN
 router.use(helmet.frameguard({ action: "deny" }));
 
+router.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", "'unsafe-inline'"], // Unsafe-inline should be avoided if possible
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "data:"],
+      objectSrc: ["'none'"],
+      upgradeInsecureRequests: [],
+    },
+  })
+);
+
 // Joi Schema for input validation
 const schema = Joi.object({
   firstName: Joi.string()
@@ -97,14 +110,18 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
     const user = await collection.findOne({ username, accountNumber });
 
     if (!user) {
-      return res.status(401).json({ message: "Authentication failed 🚨" });
+      return res
+        .status(401)
+        .json({ message: "Login failed 🚨\nUser does not exist" });
     }
 
     // Compare the provided password with the database password
     const passwordMatch = await bcrypt.compare(password, user.password);
 
     if (!passwordMatch) {
-      return res.status(401).json({ message: "Authentication failed 🚨" });
+      return res
+        .status(401)
+        .json({ message: "Login failed 🚨\nPassword is incorrect" });
     } else {
       // Authentication successful
       const token = jwt.sign(
@@ -114,7 +131,7 @@ router.post("/login", bruteforce.prevent, async (req, res) => {
       );
 
       res.status(200).json({
-        message: "Authentication successful ✅",
+        message: "Login Successful ✅",
         token: token,
         username: user.username,
       });
