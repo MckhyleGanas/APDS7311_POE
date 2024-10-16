@@ -20,13 +20,13 @@ router.use(helmet.frameguard({ action: "deny" }));
 // Joi Schema for input validation
 const schema = Joi.object({
   firstName: Joi.string()
-    .pattern(/^[A-Za-z]$/)
+    .pattern(/^[A-Za-z]+$/)
     .required()
     .messages({
       "string.pattern.base": "First name must be alphabetic.",
     }),
   lastName: Joi.string()
-    .pattern(/^[A-Za-z]$/)
+    .pattern(/^[A-Za-z]+$/)
     .required()
     .messages({
       "string.pattern.base": "Last name must be alphabetic.",
@@ -78,10 +78,11 @@ router.post("/signup", async (req, res) => {
     };
     let collection = await db.collection("users");
     let result = await collection.insertOne(newDocument);
+
     console.log("User registered with username:", newDocument.username);
     res.status(201).send(result); // Return a success response
-  } catch (error) {
-    console.error("Signup error:", error);
+  } catch (errors) {
+    console.error("Signup error:", errors);
     res.status(500).json({ message: "Signup failed" });
   }
 });
