@@ -78,10 +78,44 @@ router.post("/transaction", checkauth, async (req, res) => {
     amount: req.body.amount,
     currency: req.body.currency,
     provider: "SWIFT",
+    verified: false
   };
   let collection = await db.collection("transactions");
   let result = await collection.insertOne(newDocument);
   res.send(result).status(204);
+});
+
+// Get all transactions
+router.get("/transactions", checkauth, async (req, res) => {
+  try {
+    let collection = await db.collection("transactions");
+    let results = await collection.find({}).toArray();
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving transactions", error: error.message });
+  }
+});
+
+// Get verified transactions
+router.get("/transactions/verified", checkauth, async (req, res) => {
+  try {
+    let collection = await db.collection("transactions");
+    let results = await collection.find({ verified: true }).toArray();
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving verified transactions", error: error.message });
+  }
+});
+
+// Get unverified transactions
+router.get("/transactions/unverified", checkauth, async (req, res) => {
+  try {
+    let collection = await db.collection("transactions");
+    let results = await collection.find({ verified: false }).toArray();
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving unverified transactions", error: error.message });
+  }
 });
 
 export default router;
