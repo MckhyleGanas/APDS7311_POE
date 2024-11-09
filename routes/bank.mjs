@@ -2,6 +2,7 @@ import express from "express";
 import db from "../db/conn.mjs";
 import { ObjectId } from "mongodb";
 import checkauth from "../check-auth.mjs";
+import checkauthemp from "../check-auth-emp.mjs";
 import helmet from "helmet";
 import Joi from "joi";
 
@@ -78,7 +79,7 @@ router.post("/transaction", checkauth, async (req, res) => {
     amount: req.body.amount,
     currency: req.body.currency,
     provider: "SWIFT",
-    verified: false
+    verified: false,
   };
   let collection = await db.collection("transactions");
   let result = await collection.insertOne(newDocument);
@@ -92,29 +93,37 @@ router.get("/transactions", checkauth, async (req, res) => {
     let results = await collection.find({}).toArray();
     res.status(200).json(results);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving transactions", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error retrieving transactions", error: error.message });
   }
 });
 
 // Get verified transactions
-router.get("/transactions/verified", checkauth, async (req, res) => {
+router.get("/transactions/verified", checkauthemp, async (req, res) => {
   try {
     let collection = await db.collection("transactions");
     let results = await collection.find({ verified: true }).toArray();
     res.status(200).json(results);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving verified transactions", error: error.message });
+    res.status(500).json({
+      message: "Error retrieving verified transactions",
+      error: error.message,
+    });
   }
 });
 
 // Get unverified transactions
-router.get("/transactions/unverified", checkauth, async (req, res) => {
+router.get("/transactions/unverified", checkauthemp, async (req, res) => {
   try {
     let collection = await db.collection("transactions");
     let results = await collection.find({ verified: false }).toArray();
     res.status(200).json(results);
   } catch (error) {
-    res.status(500).json({ message: "Error retrieving unverified transactions", error: error.message });
+    res.status(500).json({
+      message: "Error retrieving unverified transactions",
+      error: error.message,
+    });
   }
 });
 

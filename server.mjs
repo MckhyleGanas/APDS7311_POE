@@ -3,10 +3,11 @@ import http from "http";
 import fs from "fs";
 import banks from "./routes/bank.mjs";
 import users from "./routes/user.mjs";
+import employees from "./routes/employee.mjs";
 import express from "express";
 import cors from "cors";
 
-const PORT = 3000;
+const PORT = 3001;
 const app = express();
 
 // SSL credentials
@@ -39,6 +40,8 @@ app.use((reg, res, next) => {
 
 app.use("/bank", banks);
 app.route("/bank", banks);
+app.use("/employee", employees);
+app.route("/employee", employees);
 app.use("/user", users);
 app.route("/user", users);
 

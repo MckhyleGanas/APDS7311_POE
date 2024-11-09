@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 
-const checkauth = (req, res, next) => {
+const checkauthemp = (req, res, next) => {
   try {
     // Extract token from the Authorization header
     const token = req.headers.authorization.split(" ")[1];
@@ -16,7 +16,7 @@ const checkauth = (req, res, next) => {
     }
 
     // Verify the token using jsonwebtoken
-    jwt.verify(token, "this_secret_should_be_longer_than_it_is");
+    jwt.verify(token, "this_secret_should_be_shorter_than_it_is");
 
     // If everything is fine, pass control to the next handler
     next();
@@ -27,4 +27,4 @@ const checkauth = (req, res, next) => {
   }
 };
 
-export default checkauth;
+export default checkauthemp;
