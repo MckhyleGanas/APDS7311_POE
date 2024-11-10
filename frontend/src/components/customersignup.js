@@ -79,7 +79,7 @@ export default function CustomerSignup() {
       lastName,
       idNumber,
       accountNumber,
-      password: hashedPassword,
+      password,
     };
 
     try {
