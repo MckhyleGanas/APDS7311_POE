@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../App.css";
 
 const Transaction = (props) => (
@@ -30,6 +31,11 @@ const Transaction = (props) => (
 export default function Dashboard() {
   const [unverifiedPosts, setUnverifiedPosts] = useState([]);
   const [verifiedPosts, setVerifiedPosts] = useState([]);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("jwt"); // Remove JWT from localStorage
+    navigate("/login");
+  };
 
   useEffect(() => {
     async function fetchTransactions() {
@@ -112,6 +118,13 @@ export default function Dashboard() {
   return (
     <div className="container">
       <h3 className="header">Transactions</h3>
+      <button
+        className="btn btn-danger"
+        onClick={handleLogout}
+        style={{ marginLeft: "20px" }}
+      >
+        Logout
+      </button>
 
       {/* Unverified Transactions Table */}
       <h4 className="header">Unverified Transactions</h4>
@@ -125,7 +138,8 @@ export default function Dashboard() {
             <th>Swift Code</th>
             <th>Amount</th>
             <th>Currency</th>
-            <th>Actions</th>
+            <th>Provider</th>
+            <th>Verification Status</th>
           </tr>
         </thead>
         <tbody>
@@ -151,6 +165,7 @@ export default function Dashboard() {
             <th>Swift Code</th>
             <th>Amount</th>
             <th>Currency</th>
+            <th>Provider</th>
           </tr>
         </thead>
         <tbody>
