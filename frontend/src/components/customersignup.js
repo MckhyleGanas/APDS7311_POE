@@ -35,17 +35,18 @@ export default function CustomerSignup() {
 
   // Validation function
   const validateInput = () => {
-    const nameRegex = /^[A-Za-z]{15,}$/;
+    const nameRegex = /^[A-Za-z]{1,}$/;
     const idNumberRegex = /^[0-9]{11,}$/;
     const accountNumberRegex = /^[0-9]{10,}$/;
-    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
+    const passwordRegex =
+      /^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/;
 
     if (!nameRegex.test(firstName)) {
-      alert("First name must be at least 15 characters and alphabetic.");
+      alert("First name must be alphabetic.");
       return false;
     }
     if (!nameRegex.test(lastName)) {
-      alert("Last name must be at least 15 characters and alphabetic.");
+      alert("Last name must be alphabetic.");
       return false;
     }
     if (!idNumberRegex.test(idNumber)) {
@@ -57,7 +58,9 @@ export default function CustomerSignup() {
       return false;
     }
     if (!passwordRegex.test(password)) {
-      alert("Password must be at least 8 characters, including letters, numbers, and special characters.");
+      alert(
+        "Password must be at least 8 characters, including letters, numbers, and special characters."
+      );
       return false;
     }
     return true;
@@ -96,7 +99,7 @@ export default function CustomerSignup() {
       }
 
       // Navigate to login page after successful signup
-      navigate("/login");
+      navigate("/customerlogin");
     } catch (error) {
       console.error("Signup Error:", error);
       alert("Signup failed! Please try again.");
