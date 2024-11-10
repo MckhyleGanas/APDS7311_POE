@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Using react-router-dom for navigation
 
-export default function Login() {
+export default function CustomerLogin() {
   const [username, setUsername] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [password, setPassword] = useState("");
@@ -50,7 +50,7 @@ export default function Login() {
       localStorage.setItem("jwt", token);
 
       // Navigate to a different page after successful login (optional)
-      navigate("/");
+      navigate("/customerhome");
     } catch (error) {
       console.error("Login Error:", error);
       alert("Login failed! Please check your credentials.");
