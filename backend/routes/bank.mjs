@@ -54,11 +54,10 @@ const schema = Joi.object({
       "string.pattern.base": "Amount must be numeric and should be above R1.",
     }),
   currency: Joi.string()
-    .pattern(/^[A-Za-z]+$/)
+    .pattern(/^[A-Z]{3}$/)
     .required()
     .messages({
-      "string.pattern.base":
-        "Currency must have letters and should be 3 letters",
+      "string.pattern.base": "Currency must be exactly 3 uppercase letters",
     }),
 });
 
