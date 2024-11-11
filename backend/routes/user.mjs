@@ -102,7 +102,7 @@ router.post("/signup", async (req, res) => {
 
 // Login route with brute-force protection
 router.post("/login", bruteforce.prevent, async (req, res) => {
-  const { username, accountNumber, password } = req.body;
+  const { _id, username, accountNumber, password } = req.body;
   console.log("Login attempt by:", username, accountNumber);
 
   try {

@@ -41,6 +41,10 @@ export default function Dashboard() {
     async function fetchTransactions() {
       const token = localStorage.getItem("jwt");
 
+      if (!token) {
+        navigate("/employeelogin");
+        return;
+      }
       try {
         // Fetch unverified transactions
         const unverifiedResponse = await fetch(
@@ -76,7 +80,7 @@ export default function Dashboard() {
     }
 
     fetchTransactions();
-  }, []);
+  }, [navigate]);
 
   async function verifyTransaction(id) {
     const token = localStorage.getItem("jwt");
@@ -123,6 +127,12 @@ export default function Dashboard() {
       (post) => post.verified === true
     );
 
+    // Check if there are any verified transactions to send
+    if (verifiedTransactions.length === 0) {
+      alert("There are no verified transactions to send.");
+      return; // Exit the function if there are no transactions to send
+    }
+
     try {
       // Delete each verified transaction by sending a request to your backend
       await Promise.all(
@@ -159,13 +169,6 @@ export default function Dashboard() {
   return (
     <div className="container">
       <h3 className="header">Transactions</h3>
-      <button
-        className="btn btn-danger"
-        onClick={handleLogout}
-        style={{ marginLeft: "20px" }}
-      >
-        Logout
-      </button>
 
       {/* Unverified Transactions Table */}
       <h4 className="header">Unverified Transactions</h4>
@@ -222,6 +225,13 @@ export default function Dashboard() {
         style={{ marginTop: "10px" }}
       >
         Send Verified Transactions to SWIFT
+      </button>
+      <button
+        className="btn btn-danger"
+        onClick={handleLogout}
+        style={{ marginLeft: "20px" }}
+      >
+        Logout
       </button>
     </div>
   );
