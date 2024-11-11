@@ -47,7 +47,7 @@ export default function CustomerLogin() {
       const { token } = data;
 
       // Save the JWT to localStorage
-      localStorage.setItem("jwt", token);
+      localStorage.setItem("jwtt", token);
 
       // Navigate to a different page after successful login (optional)
       navigate("/customerhome");

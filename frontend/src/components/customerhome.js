@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
 export default function CustomerHome() {
@@ -13,9 +13,19 @@ export default function CustomerHome() {
   });
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check if the JWT token is available in localStorage
+    const token = localStorage.getItem("jwtt");
+    if (!token) {
+      // Redirect to the login page if not logged in
+      navigate("/customerlogin");
+    }
+  }, [navigate]);
+
   const handleLogout = () => {
-    localStorage.removeItem("jwt"); // Remove JWT from localStorage
-    navigate("/employeelogin");
+    localStorage.removeItem("jwtt"); // Remove JWT from localStorage
+    navigate("/customerlogin");
   };
 
   // Handle form input changes
@@ -31,10 +41,10 @@ export default function CustomerHome() {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const token = localStorage.getItem("jwt");
+    const token = localStorage.getItem("jwtt");
     if (!token) {
       alert("Please log in to create a transaction.");
-      navigate("/home");
+      navigate("/customerlogin");
       return;
     }
 
