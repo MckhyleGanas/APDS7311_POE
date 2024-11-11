@@ -125,12 +125,17 @@ router.patch("/transactions/:id/verified", checkauthemp, async (req, res) => {
     );
 
     if (result.modifiedCount === 0) {
-      return res.status(404).json({ message: "Transaction not found or already verified." });
+      return res
+        .status(404)
+        .json({ message: "Transaction not found or already verified." });
     }
 
     res.status(200).json({ message: "Transaction verified successfully." });
   } catch (error) {
-    res.status(500).json({ message: "Error updating verification status", error: error.message });
+    res.status(500).json({
+      message: "Error updating verification status",
+      error: error.message,
+    });
   }
 });
 
@@ -145,6 +150,36 @@ router.get("/transactions/unverified", checkauthemp, async (req, res) => {
       message: "Error retrieving unverified transactions",
       error: error.message,
     });
+  }
+});
+
+router.delete("/transactions/:id", checkauthemp, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const collection = await db.collection("transactions");
+
+    // Check if transaction exists and is verified
+    const transaction = await collection.findOne({ _id: new ObjectId(id) });
+
+    if (!transaction) {
+      return res.status(404).json({ message: "Transaction not found" });
+    }
+
+    if (transaction.verified !== true) {
+      return res.status(400).json({ message: "Transaction is not verified" });
+    }
+
+    // Delete the verified transaction
+    await collection.deleteOne({ _id: new ObjectId(id) });
+    res
+      .status(200)
+      .json({ message: "Verified transaction deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting transaction:", error);
+    res
+      .status(500)
+      .json({ message: "Failed to delete transaction", error: error.message });
   }
 });
 

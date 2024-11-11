@@ -34,7 +34,7 @@ export default function Dashboard() {
   const navigate = useNavigate();
   const handleLogout = () => {
     localStorage.removeItem("jwt"); // Remove JWT from localStorage
-    navigate("/login");
+    navigate("/employeelogin");
   };
 
   useEffect(() => {
@@ -83,7 +83,7 @@ export default function Dashboard() {
 
     try {
       const response = await fetch(
-        `https://localhost:3001/bank/transactions/${id}/verify`,
+        `https://localhost:3001/bank/transactions/${id}/verified`,
         {
           method: "PATCH",
           headers: {
@@ -112,6 +112,47 @@ export default function Dashboard() {
     } catch (error) {
       console.error("Error verifying transaction:", error);
       alert("An error occurred while verifying the transaction.");
+    }
+  }
+
+  async function sendVerifiedToSwift() {
+    const token = localStorage.getItem("jwt");
+
+    // Filter out the verified transactions
+    const verifiedTransactions = verifiedPosts.filter(
+      (post) => post.verified === true
+    );
+
+    try {
+      // Delete each verified transaction by sending a request to your backend
+      await Promise.all(
+        verifiedTransactions.map(async (transaction) => {
+          const response = await fetch(
+            `https://localhost:3001/bank/transactions/${transaction._id}`,
+            {
+              method: "DELETE",
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          if (!response.ok) {
+            throw new Error(
+              `Failed to delete transaction with ID ${transaction._id}`
+            );
+          }
+        })
+      );
+
+      // Update the state to remove the deleted transactions from the verified list
+      setVerifiedPosts((prevVerifiedPosts) =>
+        prevVerifiedPosts.filter((post) => post.verified !== true)
+      );
+
+      alert("Verified transactions sent to SWIFT successfully.");
+    } catch (error) {
+      console.error("Error sending verified transactions to SWIFT:", error);
+      alert("Failed to send some transactions to SWIFT.");
     }
   }
 
@@ -166,6 +207,7 @@ export default function Dashboard() {
             <th>Amount</th>
             <th>Currency</th>
             <th>Provider</th>
+            <th>Verification Status</th>
           </tr>
         </thead>
         <tbody>
@@ -174,6 +216,13 @@ export default function Dashboard() {
           ))}
         </tbody>
       </table>
+      <button
+        className="btn btn-primary"
+        onClick={sendVerifiedToSwift}
+        style={{ marginTop: "10px" }}
+      >
+        Send Verified Transactions to SWIFT
+      </button>
     </div>
   );
 }
