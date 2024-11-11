@@ -113,6 +113,27 @@ router.get("/transactions/verified", checkauthemp, async (req, res) => {
   }
 });
 
+// Update verification status of a transaction
+router.patch("/transactions/:id/verified", checkauthemp, async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    // Find the transaction by ID and update the verified status
+    const result = await db.collection("transactions").updateOne(
+      { _id: new ObjectId(id) }, // Use ObjectId to find the transaction
+      { $set: { verified: true } } // Set verified to true
+    );
+
+    if (result.modifiedCount === 0) {
+      return res.status(404).json({ message: "Transaction not found or already verified." });
+    }
+
+    res.status(200).json({ message: "Transaction verified successfully." });
+  } catch (error) {
+    res.status(500).json({ message: "Error updating verification status", error: error.message });
+  }
+});
+
 // Get unverified transactions
 router.get("/transactions/unverified", checkauthemp, async (req, res) => {
   try {
