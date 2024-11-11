@@ -16,6 +16,6 @@ try {
   console.error(e);
 }
 
-let db = client.db("customers");
+const db = client.db("customers");
 
 export default db;

@@ -9,8 +9,8 @@ import Joi from "joi";
 
 const router = express.Router();
 
-var store = new ExpressBrute.MemoryStore();
-var bruteforce = new ExpressBrute(store);
+let store = new ExpressBrute.MemoryStore();
+let bruteforce = new ExpressBrute(store);
 
 router.use(helmet()); // Use helmet
 
