@@ -9,8 +9,8 @@ import Joi from "joi";
 
 const router = express.Router();
 
-var store = new ExpressBrute.MemoryStore();
-var bruteforce = new ExpressBrute(store);
+let store = new ExpressBrute.MemoryStore();
+let bruteforce = new ExpressBrute(store);
 
 router.use(helmet()); // Use helmet
 
@@ -45,11 +45,12 @@ const schema = Joi.object({
       "string.pattern.base": "Last name must be alphabetic.",
     }),
   email: Joi.string()
-    .pattern(/^[A-Za-z]+$/)
+    .email({ tlds: { allow: false } })
     .required()
     .messages({
-      "string.pattern.base": "Last name must be alphabetic.",
+      "string.email": "Must be a valid email address",
     }),
+
   password: Joi.string()
     .pattern(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/)
     .required()
